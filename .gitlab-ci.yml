@@ -1,0 +1,36 @@
+image: python:3.10.4
+stages:
+- test
+
+variables:
+  BROWSER: chrome
+
+.job_template:
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - pytest --browser=$BROWSER'
+
+e2e:remote:chrome:
+  extends: .job_template
+  services:
+    - selenium/standalone-chrome
+  only:
+    variables:
+      - $BROWSER == 'chrome'
+
+e2e:remote:firefox:
+  extends: .job_template
+  services:
+    - selenium/standalone-firefox
+  only:
+    variables:
+      - $BROWSER == 'firefox'
+
+e2e:remote:edge:
+  extends: .job_template
+  services:
+    - selenium/standalone-edge
+  only:
+    variables:
+      - $BROWSER == 'edge'
